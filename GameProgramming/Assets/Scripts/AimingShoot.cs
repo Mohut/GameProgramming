@@ -10,7 +10,9 @@ public class AimingShoot : MonoBehaviour
     private BulletManager bulletManager;
     private float aimingAngle;
     private bool onPlatform;
-
+    private EnemySpawner enemySpawner;
+    
+    [SerializeField] private GameObject shockwave;
     [SerializeField] private int force;
     [SerializeField] private GameObject bullet;
 
@@ -22,6 +24,7 @@ public class AimingShoot : MonoBehaviour
         bulletManager = BulletManager.Instance;
         aimingAngle = 0;
         onPlatform = false;
+        enemySpawner = EnemySpawner.Instance;
     }
 
     void Update()
@@ -69,6 +72,9 @@ public class AimingShoot : MonoBehaviour
         {
             if (bulletManager.bullets.Count < 10)
             { 
+                enemySpawner.start = true;
+                rigidbody2D.gravityScale = 0.5f;
+                
                 Vector2 shotVelocity = -(mainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position);
                 rigidbody2D.AddForce(shotVelocity.normalized * (force * Time.deltaTime), ForceMode2D.Impulse);
 
@@ -79,6 +85,11 @@ public class AimingShoot : MonoBehaviour
                 shotBullet.GetComponent<Rigidbody2D>().
                     AddForce(-shotVelocity.normalized * (10000 * Time.deltaTime), ForceMode2D.Impulse);
             }
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            Instantiate(shockwave, transform.position, Quaternion.identity);
         }
     }
 
