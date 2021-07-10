@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +9,7 @@ public class BulletManager : MonoBehaviour
 
     public RawImage[] bulletImages;
     public List<Bullet> bullets;
+    public bool noBulletsLeft;
 
     private void Awake()
     {
@@ -17,12 +17,30 @@ public class BulletManager : MonoBehaviour
         {
             Instance = this;
         }
+        else
+        {
+            Destroy(this);
+        }
+
+        noBulletsLeft = false;
     }
 
     void Start()
     {
         bullets = new List<Bullet>();
         bulletImages = GameObject.Find("Bullets").GetComponentsInChildren<RawImage>();
+    }
+
+    private void Update()
+    {
+        if (bullets.Count == 10)
+        {
+            noBulletsLeft = true;
+        }
+        else
+        {
+            noBulletsLeft = false;
+        }
     }
 
     public void UpdateBulletUI()

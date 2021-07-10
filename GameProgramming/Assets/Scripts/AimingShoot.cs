@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class AimingShoot : MonoBehaviour
@@ -11,13 +10,25 @@ public class AimingShoot : MonoBehaviour
     private float aimingAngle;
     private bool onPlatform;
     private EnemySpawner enemySpawner;
-    
+    public bool specialShootReady;
+    public static AimingShoot Instance;
+
     [SerializeField] private GameObject shockwave;
     [SerializeField] private int force;
     [SerializeField] private GameObject bullet;
 
     void Start()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+
+        specialShootReady = false;
         mainCamera = Camera.main;
         gunTransform = transform.Find("Weapon");
         rigidbody2D = GetComponent<Rigidbody2D>();
@@ -75,21 +86,23 @@ public class AimingShoot : MonoBehaviour
                 enemySpawner.start = true;
                 rigidbody2D.gravityScale = 0.5f;
                 
-                Vector2 shotVelocity = -(mainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position);
-                rigidbody2D.AddForce(shotVelocity.normalized * (force * Time.deltaTime), ForceMode2D.Impulse);
+                Vector2 shotDirection = -(mainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position);
+                rigidbody2D.AddForce(shotDirection.normalized * force, ForceMode2D.Impulse);
 
                 var shotBullet = Instantiate(bullet, gunTransform.position, Quaternion.identity);
                 bulletManager.bullets.Add(shotBullet.GetComponent<Bullet>());
                 bulletManager.UpdateBulletUI();
-                
+
                 shotBullet.GetComponent<Rigidbody2D>().
-                    AddForce(-shotVelocity.normalized * (10000 * Time.deltaTime), ForceMode2D.Impulse);
+                    AddForce(-shotDirection.normalized * 25, ForceMode2D.Impulse);
             }
         }
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1) && specialShootReady)
         {
             Instantiate(shockwave, transform.position, Quaternion.identity);
+            specialShootReady = false;
+            BorderManager.Instance.ResetAllBorders();
         }
     }
 

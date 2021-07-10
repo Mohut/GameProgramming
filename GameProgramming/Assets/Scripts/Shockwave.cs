@@ -1,5 +1,3 @@
-using System;
-using System.Security.Cryptography;
 using UnityEngine;
 
 public class Shockwave : MonoBehaviour
@@ -12,7 +10,11 @@ public class Shockwave : MonoBehaviour
     public void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.tag.Equals("Enemy"))
+        {
             Destroy(other.gameObject);
+            Score.Instance.AddPoints(300);
+        }
+            
     }
 
     void Update()

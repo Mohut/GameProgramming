@@ -17,6 +17,10 @@ public class EnemySpawner : MonoBehaviour
         {
             Instance = this;
         }
+        else
+        {
+            Destroy(this);
+        }
 
         start = false;
     }

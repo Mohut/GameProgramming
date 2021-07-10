@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0af47b8209ec59428f5dbe66eed0e41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitted: 0
   redSprite: {fileID: 21300000, guid: 0744f92535cc7f64981130fad14cf048, type: 3}
 --- !u!50 &3929550666763010981
 Rigidbody2D:
@@ -176,7 +177,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8606704250867020972}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -248,4 +249,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0af47b8209ec59428f5dbe66eed0e41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitted: 0
   redSprite: {fileID: 0}

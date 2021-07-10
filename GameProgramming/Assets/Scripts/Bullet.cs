@@ -18,8 +18,12 @@ public class Bullet : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.gameObject.tag.Equals("Enemy") && !hitted)
+        if (other.gameObject.tag.Equals("Enemy") && !hitted)
+        {
             Destroy(other.gameObject);
+            Score.Instance.AddPoints(100);
+        }
+            
         
         if (other.gameObject.tag.Equals("Border") || other.gameObject.tag.Equals("Enemy"))
         {
@@ -34,8 +38,8 @@ public class Bullet : MonoBehaviour
         else if (other.gameObject.name.Equals("Player"))
         {
             bulletManager.bullets.Remove(this);
-            bulletManager.UpdateBulletUI();
             Destroy(gameObject);
+            bulletManager.UpdateBulletUI();
         }
     }
 
