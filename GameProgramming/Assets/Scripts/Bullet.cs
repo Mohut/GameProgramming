@@ -1,19 +1,34 @@
+using System;
+using UnityEditor.MemoryProfiler;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    private BulletManager bulletManager;
     private bool firstCollisionOccured;
     public bool hitted;
+    public bool shoot;
+    public bool disabled;
     [SerializeField] private Sprite redSprite;
+    [SerializeField] private Sprite greenSprite;
 
     private void Start()
     {
-        bulletManager = BulletManager.Instance;
         firstCollisionOccured = false;
         hitted = false;
-        
-        Invoke(nameof(ChangeLayer), 0.3f);
+        shoot = false;
+        disabled = false;
+    }
+
+    private void Update()
+    {
+        if(shoot)
+            Invoke(nameof(ChangeLayer), 0.3f);
+
+        if (disabled)
+        {
+            transform.position = new Vector3(-3, -6, 0);
+            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        }
     }
 
     public void OnTriggerEnter2D(Collider2D other)
@@ -37,16 +52,23 @@ public class Bullet : MonoBehaviour
         }
         else if (other.gameObject.name.Equals("Player"))
         {
-            bulletManager.bullets.Remove(this);
-            Destroy(gameObject);
-            bulletManager.UpdateBulletUI();
+            transform.position = new Vector3(2, -6, 0);
+            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            shoot = false;
         }
     }
 
     public void ChangeLayer()
     {
+        if(gameObject.layer != 8)
         {
             gameObject.layer = 8;
         }
+    }
+
+    public void ReuseBullet()
+    {
+        GetComponent<SpriteRenderer>().sprite = greenSprite;
+        hitted = false;
     }
 }

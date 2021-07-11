@@ -81,23 +81,30 @@ public class AimingShoot : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (bulletManager.bullets.Count < 10)
-            { 
-                enemySpawner.start = true;
-                rigidbody2D.gravityScale = 0.5f;
-                
-                Vector2 shotDirection = -(mainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position);
-                rigidbody2D.AddForce(shotDirection.normalized * force, ForceMode2D.Impulse);
 
-                var shotBullet = Instantiate(bullet, gunTransform.position, Quaternion.identity);
-                bulletManager.bullets.Add(shotBullet.GetComponent<Bullet>());
-                bulletManager.UpdateBulletUI();
+            enemySpawner.start = true;
+            rigidbody2D.gravityScale = 0.5f;
+            
+            for (int i = 9; i >= 0; i--)
+            {
+                if (!BulletManager.Instance.bullets[i].shoot && !BulletManager.Instance.bullets[i].disabled)
+                {
+                    bulletManager.bullets[i].gameObject.layer = 3;
+                    BulletManager.Instance.bullets[i].transform.position = transform.position;
+                    Vector2 shotDirection = -(mainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position);
+                    rigidbody2D.AddForce(shotDirection.normalized * force, ForceMode2D.Impulse);
+                    
+                    BulletManager.Instance.bullets[i].GetComponent<Rigidbody2D>().
+                        AddForce(-shotDirection.normalized * 25, ForceMode2D.Impulse);
+                    
+                    BulletManager.Instance.bullets[i].shoot = true;
+                    BulletManager.Instance.bullets[i].ReuseBullet();
 
-                shotBullet.GetComponent<Rigidbody2D>().
-                    AddForce(-shotDirection.normalized * 25, ForceMode2D.Impulse);
+                    break;
+                }
             }
         }
-
+        
         if (Input.GetMouseButtonDown(1) && specialShootReady)
         {
             Instantiate(shockwave, transform.position, Quaternion.identity);

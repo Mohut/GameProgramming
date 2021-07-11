@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (BulletManager.Instance.noBulletsLeft)
+        if (false)
         {
             GameOverTime -= Time.deltaTime;
         }
@@ -19,8 +19,6 @@ public class GameManager : MonoBehaviour
         {
             GameOverTime = 3;
         }
-        
-        Debug.Log(GameOverTime);
 
         if (GameOverTime <= 0)
         {

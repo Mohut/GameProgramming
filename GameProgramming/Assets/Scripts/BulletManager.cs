@@ -1,15 +1,15 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 
 public class BulletManager : MonoBehaviour
 {
     public static BulletManager Instance { get; private set; }
 
+    public int hitCounter;
+    public RawImage[] backgrounds;
     public RawImage[] bulletImages;
-    public List<Bullet> bullets;
-    public bool noBulletsLeft;
+    [SerializeField] public Bullet[] bullets;
 
     private void Awake()
     {
@@ -22,37 +22,72 @@ public class BulletManager : MonoBehaviour
             Destroy(this);
         }
 
-        noBulletsLeft = false;
+        hitCounter = 0;
     }
-
-    void Start()
-    {
-        bullets = new List<Bullet>();
-        bulletImages = GameObject.Find("Bullets").GetComponentsInChildren<RawImage>();
-    }
+    
 
     private void Update()
     {
-        if (bullets.Count == 10)
-        {
-            noBulletsLeft = true;
-        }
-        else
-        {
-            noBulletsLeft = false;
-        }
+        transform.position = AimingShoot.Instance.transform.position;
+        UpdateBulletUI();
+        SortArray();
     }
 
-    public void UpdateBulletUI()
+    public void SortArray()
     {
-        foreach (var image in bulletImages)
+        for (int i = 0; i < bullets.Length-1; i++)
         {
-            image.gameObject.SetActive(false);
+
+            if (!bullets[i].shoot && bullets[i + 1].shoot)
+            {
+                Bullet bullet = bullets[i];
+                bullets[i] = bullets[i + 1];
+                bullets[i + 1] = bullet;
+            }
         }
 
-        for (int i = 0; i < 10 - bullets.Count; i++)
+        for (int i = 0; i < bullets.Length - 1; i++)
         {
-            bulletImages[i].gameObject.SetActive(true);
+            if (!bullets[i].disabled && bullets[i + 1].disabled)
+            {
+                Bullet bullet = bullets[i];
+                bullets[i] = bullets[i + 1];
+                bullets[i + 1] = bullet;
+            }
+        }
+    }
+    
+    public void UpdateBulletUI()
+    {
+        switch (Instance.hitCounter)
+        {
+            case 1:
+                backgrounds[0].enabled = false;
+                backgrounds[1].enabled = false;
+                backgrounds[2].enabled = false;
+                break;
+            case 2:
+                backgrounds[3].enabled = false;
+                backgrounds[4].enabled = false;
+                backgrounds[5].enabled = false;
+                break;
+            case 3:
+                backgrounds[6].enabled = false;
+                backgrounds[7].enabled = false;
+                backgrounds[8].enabled = false;
+                break;
+        }
+        
+        for (int i = 0; i < bullets.Length; i++)
+        {
+            if (!bullets[9-i].shoot && !bullets[9-i].disabled)
+            {
+                bulletImages[9-i].enabled = true;
+            }
+            else
+            {
+                bulletImages[9-i].enabled = false;
+            }
         }
     }
 }
