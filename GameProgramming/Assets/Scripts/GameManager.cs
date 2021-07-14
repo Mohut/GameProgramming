@@ -1,12 +1,16 @@
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     private float GameOverTime;
+    private TextMeshProUGUI timeText;
 
     private void Start()
     {
-        GameOverTime = 3;
+        GameOverTime = 5;
+        timeText = GameObject.Find("GameOverTime").GetComponent<TextMeshProUGUI>();
+        timeText.text = GameOverTime.ToString();
     }
 
     private void Update()
@@ -17,13 +21,15 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            GameOverTime = 3;
+            GameOverTime = 5;
         }
 
         if (GameOverTime <= 0)
         {
             GameOver();
         }
+
+        timeText.text = GameOverTime.ToString();
     }
 
     public void GameOver()

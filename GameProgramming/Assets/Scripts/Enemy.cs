@@ -21,29 +21,28 @@ public class Enemy : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.tag.Equals("Player"))
+        if (other.gameObject.tag.Equals("Player") && BulletManager.Instance.maxBullets > 1)
         {
-            BulletManager.Instance.hitCounter++;
+            var UIElement1 = BulletManager.Instance.UIBullets[BulletManager.Instance.UIBullets.Count - 1];
+            BulletManager.Instance.UIBullets.Remove(UIElement1);
+            Destroy(UIElement1.gameObject);
+            
+            var UIElement2 = BulletManager.Instance.UIBullets[BulletManager.Instance.UIBullets.Count - 1];
+            BulletManager.Instance.UIBullets.Remove(UIElement2);
+            Destroy(UIElement2.gameObject);
+            
+            var UIElement3 = BulletManager.Instance.UIBullets[BulletManager.Instance.UIBullets.Count - 1];
+            BulletManager.Instance.UIBullets.Remove(UIElement3);
+            Destroy(UIElement3.gameObject);
 
-            switch (BulletManager.Instance.hitCounter)
+            while (BulletManager.Instance.UIBullets.Count < BulletManager.Instance.bullets.Count)
             {
-                case 1:
-                    BulletManager.Instance.bullets[0].disabled = true;
-                    BulletManager.Instance.bullets[1].disabled = true;
-                    BulletManager.Instance.bullets[2].disabled = true;
-                    break;
-                case 2:
-                    BulletManager.Instance.bullets[3].disabled = true;
-                    BulletManager.Instance.bullets[4].disabled = true;
-                    BulletManager.Instance.bullets[5].disabled = true;
-                    break;
-                case 3:
-                    Debug.Log("yes");
-                    BulletManager.Instance.bullets[6].disabled = true;
-                    BulletManager.Instance.bullets[7].disabled = true;
-                    BulletManager.Instance.bullets[8].disabled = true;
-                    break;
+                var bullet = BulletManager.Instance.bullets[BulletManager.Instance.bullets.Count - 1];
+                BulletManager.Instance.bullets.Remove(bullet);
+                Destroy(bullet.gameObject);
             }
+
+            BulletManager.Instance.maxBullets -= 3;
         }
     }
 }

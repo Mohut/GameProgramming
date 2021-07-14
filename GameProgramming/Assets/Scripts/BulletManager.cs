@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,12 +8,13 @@ using UnityEngine.UI;
 public class BulletManager : MonoBehaviour
 {
     public static BulletManager Instance { get; private set; }
-
-    public int hitCounter;
-    public RawImage[] backgrounds;
-    public RawImage[] bulletImages;
-    [SerializeField] public Bullet[] bullets;
-
+    
+    public List<GameObject> bullets;
+    public List<GameObject> UIBullets;
+    [SerializeField] private GameObject UIBullet;
+    [SerializeField] private GameObject UIBulletHolder;
+    public int maxBullets;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -21,73 +25,40 @@ public class BulletManager : MonoBehaviour
         {
             Destroy(this);
         }
-
-        hitCounter = 0;
     }
-    
+
+    private void Start()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            var bulletUI = Instantiate(UIBullet, transform.position, Quaternion.identity);
+            bulletUI.transform.parent = UIBulletHolder.transform;
+            UIBullets.Add(bulletUI);
+        }
+
+        UIBullets.Reverse();
+        bullets = new List<GameObject>();
+        maxBullets = 10;
+    }
+
 
     private void Update()
     {
-        transform.position = AimingShoot.Instance.transform.position;
-        UpdateBulletUI();
-        SortArray();
+        UpdateUI();
     }
 
-    public void SortArray()
+    void UpdateUI()
     {
-        for (int i = 0; i < bullets.Length-1; i++)
+        for (int i = 0; i < bullets.Count; i++)
         {
-
-            if (!bullets[i].shoot && bullets[i + 1].shoot)
-            {
-                Bullet bullet = bullets[i];
-                bullets[i] = bullets[i + 1];
-                bullets[i + 1] = bullet;
-            }
+            var UIElement = UIBullets[i].GetComponentsInChildren<RawImage>();
+            UIElement[1].enabled = false;
         }
 
-        for (int i = 0; i < bullets.Length - 1; i++)
+        for (int i = maxBullets-1; i > bullets.Count-1; i--)
         {
-            if (!bullets[i].disabled && bullets[i + 1].disabled)
-            {
-                Bullet bullet = bullets[i];
-                bullets[i] = bullets[i + 1];
-                bullets[i + 1] = bullet;
-            }
-        }
-    }
-    
-    public void UpdateBulletUI()
-    {
-        switch (Instance.hitCounter)
-        {
-            case 1:
-                backgrounds[0].enabled = false;
-                backgrounds[1].enabled = false;
-                backgrounds[2].enabled = false;
-                break;
-            case 2:
-                backgrounds[3].enabled = false;
-                backgrounds[4].enabled = false;
-                backgrounds[5].enabled = false;
-                break;
-            case 3:
-                backgrounds[6].enabled = false;
-                backgrounds[7].enabled = false;
-                backgrounds[8].enabled = false;
-                break;
-        }
-        
-        for (int i = 0; i < bullets.Length; i++)
-        {
-            if (!bullets[9-i].shoot && !bullets[9-i].disabled)
-            {
-                bulletImages[9-i].enabled = true;
-            }
-            else
-            {
-                bulletImages[9-i].enabled = false;
-            }
+            var UIElement = UIBullets[i].GetComponentsInChildren<RawImage>();
+            UIElement[1].enabled = true;
         }
     }
 }

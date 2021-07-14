@@ -26,8 +26,11 @@ public class Score : MonoBehaviour
         text.text = score.ToString();
     }
 
-    public void AddPoints(int points)
+    public void AddPoints(int points, Vector2 position, GameObject enemy)
     {
         score += points;
+        TextMeshProUGUI text = Instantiate( new TextMeshProUGUI(), new Vector2(0,0), Quaternion.identity);
+        text.text = points.ToString();
+        Destroy(enemy);
     }
 }

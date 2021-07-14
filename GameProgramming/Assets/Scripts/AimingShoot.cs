@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 public class AimingShoot : MonoBehaviour
 {
@@ -6,7 +7,6 @@ public class AimingShoot : MonoBehaviour
     private Camera mainCamera;
     private Transform gunTransform;
     private Rigidbody2D rigidbody2D;
-    private BulletManager bulletManager;
     private float aimingAngle;
     private bool onPlatform;
     private EnemySpawner enemySpawner;
@@ -32,7 +32,6 @@ public class AimingShoot : MonoBehaviour
         mainCamera = Camera.main;
         gunTransform = transform.Find("Weapon");
         rigidbody2D = GetComponent<Rigidbody2D>();
-        bulletManager = BulletManager.Instance;
         aimingAngle = 0;
         onPlatform = false;
         enemySpawner = EnemySpawner.Instance;
@@ -81,27 +80,16 @@ public class AimingShoot : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-
             enemySpawner.start = true;
             rigidbody2D.gravityScale = 0.5f;
             
-            for (int i = 9; i >= 0; i--)
-            {
-                if (!BulletManager.Instance.bullets[i].shoot && !BulletManager.Instance.bullets[i].disabled)
-                {
-                    bulletManager.bullets[i].gameObject.layer = 3;
-                    BulletManager.Instance.bullets[i].transform.position = transform.position;
-                    Vector2 shotDirection = -(mainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position);
-                    rigidbody2D.AddForce(shotDirection.normalized * force, ForceMode2D.Impulse);
-                    
-                    BulletManager.Instance.bullets[i].GetComponent<Rigidbody2D>().
-                        AddForce(-shotDirection.normalized * 25, ForceMode2D.Impulse);
-                    
-                    BulletManager.Instance.bullets[i].shoot = true;
-                    BulletManager.Instance.bullets[i].ReuseBullet();
-
-                    break;
-                }
+            if (BulletManager.Instance.bullets.Count < BulletManager.Instance.maxBullets)
+            { 
+                var newBullet = Instantiate(bullet, transform.position, Quaternion.identity);
+                Vector2 shotDirection = -(mainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position);
+                rigidbody2D.AddForce(shotDirection.normalized * force, ForceMode2D.Impulse);
+                newBullet.GetComponent<Rigidbody2D>().AddForce(-shotDirection.normalized * 25, ForceMode2D.Impulse);
+                BulletManager.Instance.bullets.Add(newBullet);
             }
         }
         
