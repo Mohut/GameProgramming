@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Quaternion = UnityEngine.Quaternion;
 using Random = UnityEngine.Random;
@@ -7,6 +8,8 @@ public class EnemySpawner : MonoBehaviour
     public static EnemySpawner Instance;
     [SerializeField] private GameObject enemy;
     public bool start;
+    private float spawnTime;
+    private float spawnTimer;
 
     private void Awake()
     {
@@ -19,13 +22,24 @@ public class EnemySpawner : MonoBehaviour
         {
             Destroy(this);
         }
-
-        start = false;
     }
 
     private void Start()
     {
-        InvokeRepeating(nameof(SpawnEnemy), 1, 3);
+        start = false;
+        spawnTime = 3;
+        spawnTimer = 0;
+        InvokeRepeating(nameof(ReduceSpawnTime), 10, 10);
+    }
+
+    private void Update()
+    {
+        spawnTimer += Time.deltaTime;
+        if (spawnTime < spawnTimer)
+        {
+            SpawnEnemy();
+            spawnTimer = 0;
+        }
     }
 
     public void SpawnEnemy()
@@ -38,6 +52,9 @@ public class EnemySpawner : MonoBehaviour
             Instantiate(enemy, new Vector3(randomX, randomY, 0), Quaternion.identity);
         }
     }
-       
-    
+
+    public void ReduceSpawnTime()
+    {
+        spawnTime -= 0.5f;
+    }
 }

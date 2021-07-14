@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (false)
+        if (BulletManager.Instance.bullets.Count == BulletManager.Instance.maxBullets)
         {
             GameOverTime -= Time.deltaTime;
         }
@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
             GameOver();
         }
 
-        timeText.text = GameOverTime.ToString();
+        timeText.text = GameOverTime.ToString().Substring(0, 1);
     }
 
     public void GameOver()

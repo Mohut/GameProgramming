@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEditor;
@@ -7,6 +8,7 @@ public class Score : MonoBehaviour
 {
     public int score;
     [SerializeField] private TextMeshProUGUI textUI;
+    private TextMeshProUGUI scoreText;
     public static Score Instance;
     private GameObject canvas;
     void Start()
@@ -22,9 +24,13 @@ public class Score : MonoBehaviour
         
         score = 0;
         canvas = GameObject.Find("UI");
+        scoreText = GetComponent<TextMeshProUGUI>();
     }
-    
-    
+
+    private void Update()
+    {
+        scoreText.text = score.ToString();
+    }
 
     public void AddPoints(int points, GameObject enemy)
     {
