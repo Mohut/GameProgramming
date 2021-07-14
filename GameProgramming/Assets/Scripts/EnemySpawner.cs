@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using UnityEngine;
 using Quaternion = UnityEngine.Quaternion;
 using Random = UnityEngine.Random;
@@ -34,19 +32,10 @@ public class EnemySpawner : MonoBehaviour
     {
         if (start)
         {
-             GenerateNumbers:
-             var randomX = Random.Range(-0.9f, 1.0f);
-             var randomY = Random.Range(-0.9f, 1.0f);
-                                      
-             if (randomX < 0.5 && randomX > -0.5 && randomY < 0.5 && randomY > -0.5)
-             { 
-                 goto GenerateNumbers;
-             }
-            
-             var currentEnemy = Instantiate(enemy, transform.position, Quaternion.identity);
-             currentEnemy.GetComponent<Rigidbody2D>().AddForce(new Vector2(randomX * (10000 * Time.deltaTime),
-                 randomY * (10000 * Time.deltaTime)), ForceMode2D.Impulse);
-            
+            var randomX = Random.Range(-7f, 7f);
+            var randomY = Random.Range(-3f, 3f);
+
+            Instantiate(enemy, new Vector3(randomX, randomY, 0), Quaternion.identity);
         }
     }
        

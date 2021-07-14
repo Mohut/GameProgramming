@@ -11,7 +11,8 @@ public class Shockwave : MonoBehaviour
     {
         if (other.gameObject.tag.Equals("Enemy"))
         {
-            Score.Instance.AddPoints(300, other.transform.position, other.gameObject);
+            Score.Instance.AddPoints(300, other.gameObject);
+            Destroy(other.gameObject);
         }
             
     }

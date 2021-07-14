@@ -1,11 +1,14 @@
+using System.Collections;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 
 public class Score : MonoBehaviour
 {
     public int score;
-    private TextMeshProUGUI text;
+    [SerializeField] private TextMeshProUGUI textUI;
     public static Score Instance;
+    private GameObject canvas;
     void Start()
     {
         if (Instance == null)
@@ -18,19 +21,25 @@ public class Score : MonoBehaviour
         }
         
         score = 0;
-        text = GetComponent<TextMeshProUGUI>();
+        canvas = GameObject.Find("UI");
     }
     
-    void Update()
-    {
-        text.text = score.ToString();
-    }
+    
 
-    public void AddPoints(int points, Vector2 position, GameObject enemy)
+    public void AddPoints(int points, GameObject enemy)
     {
         score += points;
-        TextMeshProUGUI text = Instantiate( new TextMeshProUGUI(), new Vector2(0,0), Quaternion.identity);
+        TextMeshProUGUI text = Instantiate( textUI, Camera.main.WorldToScreenPoint(enemy.transform.position), Quaternion.identity);
         text.text = points.ToString();
-        Destroy(enemy);
+        text.transform.parent = canvas.transform;
+        StartCoroutine(Animate(text));
     }
+
+    IEnumerator Animate(TextMeshProUGUI text)
+    {
+        text.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 50f);
+        yield return new WaitForSeconds(0.5f);
+        Destroy(text.gameObject);
+    }
+    
 }

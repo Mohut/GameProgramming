@@ -31,7 +31,8 @@ public class Bullet : MonoBehaviour
     {
         if (other.gameObject.tag.Equals("Enemy") && !hitted)
         {
-            
+            Score.Instance.AddPoints(100, other.gameObject);
+            Destroy(other.gameObject);
         }
         
         if (other.gameObject.tag.Equals("Border") || other.gameObject.tag.Equals("Enemy"))
