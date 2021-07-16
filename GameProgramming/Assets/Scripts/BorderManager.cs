@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BorderManager : MonoBehaviour
 {
-    [SerializeField] private GameObject[] borders;
+    [SerializeField] private Border[] borders;
     public static BorderManager Instance;
 
     private void Start()
@@ -23,7 +23,7 @@ public class BorderManager : MonoBehaviour
         
         foreach (var border in borders)
         {
-            if (!border.GetComponent<Border>().activated)
+            if (!border.activated)
             {
                 allActivated = false;
             }
@@ -35,10 +35,9 @@ public class BorderManager : MonoBehaviour
 
     public void ResetAllBorders()
     {
-        foreach (var border in borders)
+        foreach (Border border in borders)
         {
-            border.GetComponent<SpriteRenderer>().color = Color.red;
-            border.GetComponent<Border>().activated = false;
+            border.ResetBorder();
         }
     }
 }
