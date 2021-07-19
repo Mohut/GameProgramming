@@ -1,21 +1,26 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
     private bool firstCollisionOccured;
     public bool hitted;
-    public bool shoot;
     public bool disabled;
     [SerializeField] private Sprite redSprite;
-    [SerializeField] private Sprite greenSprite;
+    private int rotateCounter;
+    private float rotateTimer;
+    private float rotateTime;
+    [SerializeField] private GameObject explosion;
 
     private void Start()
     {
         firstCollisionOccured = false;
         hitted = false;
-        shoot = false;
         disabled = false;
         Invoke(nameof(ChangeLayer), 0.3f);
+        rotateCounter = 0;
+        rotateTimer = 0;
+        rotateTime = 0.3f;
     }
 
     private void Update()
@@ -25,12 +30,20 @@ public class Bullet : MonoBehaviour
             transform.position = new Vector3(-3, -6, 0);
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         }
+
+        rotateTimer += Time.deltaTime;
+        if (rotateTimer > rotateTime)
+        {
+            Rotate();
+            rotateTimer = 0;
+        }
     }
 
     public void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.tag.Equals("Enemy") && !hitted)
         {
+            Instantiate(explosion, other.transform.position, quaternion.identity);
             Score.Instance.AddPoints(100, other.gameObject);
             Destroy(other.gameObject);
         }
@@ -57,9 +70,26 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    public void ReuseBullet()
+    public void Rotate()
     {
-        GetComponent<SpriteRenderer>().sprite = greenSprite;
-        hitted = false;
+        switch (rotateCounter)
+        {
+            case 0:
+                GetComponent<SpriteRenderer>().flipX = false;
+                rotateCounter = 1;
+                break;
+            case 1:
+                GetComponent<SpriteRenderer>().flipY = true;
+                rotateCounter = 2;
+                break;
+            case 2:
+                GetComponent<SpriteRenderer>().flipX = true;
+                rotateCounter = 3;
+                break;
+            case 3:
+                GetComponent<SpriteRenderer>().flipY = false;
+                rotateCounter = 0;
+                break;
+        }
     }
 }

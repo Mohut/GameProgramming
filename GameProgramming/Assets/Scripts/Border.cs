@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Border : MonoBehaviour
@@ -25,15 +26,16 @@ public class Border : MonoBehaviour
     public void ResetBorder()
     {
         GetComponent<SpriteRenderer>().sprite = notActivatedBorder;
+        GetComponent<Animator>().Play("New State");
         activated = false;
     }
 
     public void Bounce()
     {
         GetComponent<SpriteRenderer>().sprite = activatedBorder;
+        GetComponent<Animator>().Play("BorderBounce");
         activated = true;
         BorderManager.Instance.CheckBorders();
         GetComponent<AudioSource>().Play();
-        GetComponent<Animator>().Play("BorderBounce");
     }
 }
