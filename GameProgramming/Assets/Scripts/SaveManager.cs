@@ -29,13 +29,14 @@ public class SaveManager : MonoBehaviour
 
     public void Save()
     {
+        if(pointsList.Count > 3)
+            pointsList.Remove(pointsList.Keys.First());
+        
         BinaryFormatter formatter = new BinaryFormatter();
         string path = Application.persistentDataPath + "/saves.deano";
         FileStream stream = new FileStream(path, FileMode.Create);
         formatter.Serialize(stream, pointsList);
         stream.Close();
-        if(pointsList.Count > 0)
-            pointsList.Remove(pointsList.Keys.First());
     }
 
     public SortedDictionary<int, string> Load()

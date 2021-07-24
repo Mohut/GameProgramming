@@ -10,14 +10,12 @@ public class GameManager : MonoBehaviour
     private TextMeshProUGUI timeText;
     [SerializeField] private RawImage endGameScreen;
     [SerializeField] private TextMeshProUGUI pointsText;
-    private SortedDictionary<int, string> pointsList;
 
     private void Start()
     {
         GameOverTime = 5;
         timeText = GameObject.Find("GameOverTime").GetComponent<TextMeshProUGUI>();
         timeText.text = GameOverTime.ToString();
-        pointsList = SaveManager.Instance.Load();
     }
 
     private void Update()
