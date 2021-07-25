@@ -1,7 +1,9 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Shockwave : MonoBehaviour
 {
+    [SerializeField] private GameObject explosion;
     private void Start()
     {
         Invoke(nameof(Destroy), 0.1f);
@@ -11,6 +13,8 @@ public class Shockwave : MonoBehaviour
     {
         if (other.gameObject.tag.Equals("Enemy"))
         {
+            AimingShoot.Instance.PlayHittedSound();
+            Instantiate(explosion, other.transform.position, quaternion.identity);
             Score.Instance.AddPoints(300, other.gameObject);
             Destroy(other.gameObject);
         }

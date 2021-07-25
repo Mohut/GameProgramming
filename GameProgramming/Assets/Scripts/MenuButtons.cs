@@ -2,7 +2,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class MenuButtons : MonoBehaviour
 {
@@ -22,8 +21,19 @@ public class MenuButtons : MonoBehaviour
     {
         int points = Score.Instance.score;
         string name = inputField.text;
-        SaveManager.Instance.pointsList.Add(points, name);
+        SaveManager.Instance.pointsList.AddNewPoints(points, name);
         SaveManager.Instance.Save();
         SceneManager.LoadScene(0);
     }
+
+    public void TryAgain()
+    {
+        int points = Score.Instance.score;
+        string name = inputField.text;
+        SaveManager.Instance.pointsList.AddNewPoints(points, name);
+        SaveManager.Instance.Save();
+        Time.timeScale = 1;
+        SceneManager.LoadScene(0);
+    }
+    
 }

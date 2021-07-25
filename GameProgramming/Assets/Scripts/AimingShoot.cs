@@ -16,6 +16,12 @@ public class AimingShoot : MonoBehaviour
     [SerializeField] private GameObject shockwave;
     [SerializeField] private int force;
     [SerializeField] private GameObject bullet;
+    [SerializeField] private AudioClip specialSound;
+    [SerializeField] private AudioClip collectSound;
+    [SerializeField] private AudioClip shootSound;
+    [SerializeField] private AudioClip gotHitSound;
+    [SerializeField] private AudioClip hittedSound;
+    [SerializeField] private AudioClip music;
 
     void Start()
     {
@@ -80,11 +86,14 @@ public class AimingShoot : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            if(!enemySpawner.start)
+                GetComponent<AudioSource>().PlayOneShot(music);
             enemySpawner.start = true;
             rigidbody2D.gravityScale = 0.5f;
             
             if (BulletManager.Instance.bullets.Count < BulletManager.Instance.maxBullets)
             { 
+                GetComponent<AudioSource>().PlayOneShot(shootSound);
                 var newBullet = Instantiate(bullet, transform.position, Quaternion.identity);
                 Vector2 shotDirection = -(mainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position);
                 rigidbody2D.AddForce(shotDirection.normalized * force, ForceMode2D.Impulse);
@@ -95,10 +104,26 @@ public class AimingShoot : MonoBehaviour
         
         if (Input.GetMouseButtonDown(1) && specialShootReady)
         {
+            GetComponent<AudioSource>().PlayOneShot(specialSound);
             Instantiate(shockwave, transform.position, Quaternion.identity);
             specialShootReady = false;
             BorderManager.Instance.ResetAllBorders();
         }
+    }
+
+    public void PlayCollectSound()
+    {
+        GetComponent<AudioSource>().PlayOneShot(collectSound);
+    }
+
+    public void PLayGotHitSound()
+    {
+        GetComponent<AudioSource>().PlayOneShot(gotHitSound);
+    }
+
+    public void PlayHittedSound()
+    {
+        GetComponent<AudioSource>().PlayOneShot(hittedSound);
     }
 
 }

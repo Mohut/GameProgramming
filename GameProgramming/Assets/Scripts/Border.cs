@@ -12,7 +12,6 @@ public class Border : MonoBehaviour
     private void Start()
     {
         activated = false;
-        GetComponent<AudioSource>().volume = 0.3f;
     }
 
     private void OnCollisionEnter2D(Collision2D other)

@@ -51,6 +51,7 @@ public class Enemy : MonoBehaviour
                 Destroy(bullet.gameObject);
             }
 
+            AimingShoot.Instance.PLayGotHitSound();
             BulletManager.Instance.maxBullets -= 3;
         }
     }

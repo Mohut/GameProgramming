@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
 using TMPro;
@@ -8,7 +7,7 @@ using TMPro;
 public class SaveManager : MonoBehaviour
 {
     public static SaveManager Instance;
-    public SortedDictionary<int, string> pointsList;
+    public HighscoreList pointsList;
     [SerializeField] private List<TextMeshProUGUI> pointsText;
 
     private void Start()
@@ -22,16 +21,13 @@ public class SaveManager : MonoBehaviour
         {
             Destroy(this);
         }
-        
+
         pointsList = Load();
         LoadHightscoreList();
     }
 
     public void Save()
     {
-        if(pointsList.Count > 3)
-            pointsList.Remove(pointsList.Keys.First());
-        
         BinaryFormatter formatter = new BinaryFormatter();
         string path = Application.persistentDataPath + "/saves.deano";
         FileStream stream = new FileStream(path, FileMode.Create);
@@ -39,7 +35,7 @@ public class SaveManager : MonoBehaviour
         stream.Close();
     }
 
-    public SortedDictionary<int, string> Load()
+    public HighscoreList Load()
     {
         string path = Application.persistentDataPath + "/saves.deano";
         
@@ -48,15 +44,14 @@ public class SaveManager : MonoBehaviour
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(path, FileMode.Open);
 
-            SortedDictionary<int, string> result = formatter.Deserialize(stream) as SortedDictionary<int, string>;
+            HighscoreList result = formatter.Deserialize(stream) as HighscoreList;
             stream.Close();
             
-            Debug.Log(result.Count);
             return result;
         }
         
         Debug.Log("Save file not found in " + path);
-        return new SortedDictionary<int, string>();
+        return new HighscoreList();
     }
 
     public void LoadHightscoreList()
@@ -67,19 +62,40 @@ public class SaveManager : MonoBehaviour
             text.text = "-";
         }
         
-        if (pointsList != null)
+        if (pointsList.pointsList != null)
         {
-            int i = pointsList.Count-1;
-
-            string a = "";
-            
-            foreach(KeyValuePair<int, string> pair in pointsList)
+            if (pointsList.pointsList.Count <= 3)
             {
-                if (i >= 0){
-                 pointsText[i].text = pair.Key + " " + pair.Value;
-                 i--;
+                int i = 0;
+                
+                foreach(var points in pointsList.pointsList)
+                {
+                    if (i <= pointsList.pointsList.Count-1)
+                    {
+                        pointsText[i].text = points + " " + pointsList.namesList[i];
+                        i++;
+                    }
+                }
+            }
+            else
+            {
+                int i = 0;
+                
+                foreach(var points in pointsList.pointsList)
+                {
+                    if (i <= 2)
+                    {
+                        pointsText[i].text = points + " " + pointsList.namesList[i];
+                        i++;
+                    }
                 }
             }
         }
+
+        foreach (var VARIABLE in pointsList.pointsList)
+        {
+            Debug.Log(VARIABLE);
+        }
+        
     }
 }

@@ -43,6 +43,7 @@ public class Bullet : MonoBehaviour
     {
         if (other.gameObject.tag.Equals("Enemy") && !hitted)
         {
+            GetComponent<AudioSource>().Play();
             Instantiate(explosion, other.transform.position, quaternion.identity);
             Score.Instance.AddPoints(100, other.gameObject);
             Destroy(other.gameObject);
@@ -56,7 +57,7 @@ public class Bullet : MonoBehaviour
         
         else if (other.gameObject.name.Equals("Player"))
         {
-            Debug.Log("yes");
+            AimingShoot.Instance.PlayCollectSound();
             BulletManager.Instance.bullets.Remove(gameObject);
             Destroy(gameObject);
         }
