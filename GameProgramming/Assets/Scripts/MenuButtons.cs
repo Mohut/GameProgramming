@@ -21,7 +21,15 @@ public class MenuButtons : MonoBehaviour
     {
         int points = Score.Instance.score;
         string name = inputField.text;
-        SaveManager.Instance.pointsList.AddNewPoints(points, name);
+        if (string.IsNullOrEmpty(name))
+        {
+            Debug.Log("empty");
+            SaveManager.Instance.pointsList.AddNewPoints(points, "???"); 
+        }
+        else
+        {
+            SaveManager.Instance.pointsList.AddNewPoints(points, name); 
+        }
         SaveManager.Instance.Save();
         SceneManager.LoadScene(0);
     }
@@ -30,10 +38,17 @@ public class MenuButtons : MonoBehaviour
     {
         int points = Score.Instance.score;
         string name = inputField.text;
-        SaveManager.Instance.pointsList.AddNewPoints(points, name);
+        if (string.IsNullOrEmpty(name))
+        {
+            Debug.Log("empty");
+            SaveManager.Instance.pointsList.AddNewPoints(points, "???"); 
+        }
+        else
+        {
+           SaveManager.Instance.pointsList.AddNewPoints(points, name); 
+        }
         SaveManager.Instance.Save();
-        Time.timeScale = 1;
-        SceneManager.LoadScene(0);
+        Scene scene = SceneManager.GetActiveScene(); SceneManager.LoadScene(scene.name);
     }
     
 }

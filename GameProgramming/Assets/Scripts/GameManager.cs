@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        Application.targetFrameRate = 60;
+        Time.timeScale = 1;
         GameOverTime = 5;
         timeText = GameObject.Find("GameOverTime").GetComponent<TextMeshProUGUI>();
         timeText.text = GameOverTime.ToString();

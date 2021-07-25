@@ -9,6 +9,7 @@ public class SaveManager : MonoBehaviour
     public static SaveManager Instance;
     public HighscoreList pointsList;
     [SerializeField] private List<TextMeshProUGUI> pointsText;
+    [SerializeField] private List<TextMeshProUGUI> namesText;
 
     private void Start()
     {
@@ -72,7 +73,8 @@ public class SaveManager : MonoBehaviour
                 {
                     if (i <= pointsList.pointsList.Count-1)
                     {
-                        pointsText[i].text = points + " " + pointsList.namesList[i];
+                        pointsText[i].text = points + " Points";
+                        namesText[i].text = pointsList.namesList[i];
                         i++;
                     }
                 }
@@ -85,17 +87,12 @@ public class SaveManager : MonoBehaviour
                 {
                     if (i <= 2)
                     {
-                        pointsText[i].text = points + " " + pointsList.namesList[i];
+                        pointsText[i].text = points + " Points";
+                        namesText[i].text = pointsList.namesList[i];
                         i++;
                     }
                 }
             }
         }
-
-        foreach (var VARIABLE in pointsList.pointsList)
-        {
-            Debug.Log(VARIABLE);
-        }
-        
     }
 }

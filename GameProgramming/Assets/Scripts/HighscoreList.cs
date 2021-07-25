@@ -20,6 +20,9 @@ public class HighscoreList
         if (pointsList.Count < 4)
         {
             pointsList.Add(points);
+
+            if (name.Length > 8)
+                name = name.Substring(0,7) + ".";
             namesList.Add(name);
         }
         else if(pointsList.Last() < points)
