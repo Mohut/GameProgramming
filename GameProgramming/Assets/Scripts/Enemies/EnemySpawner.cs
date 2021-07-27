@@ -13,7 +13,6 @@ public class EnemySpawner : MonoBehaviour
 
     private void Awake()
     {
-        
         if (Instance == null)
         {
             Instance = this;
@@ -34,6 +33,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void Update()
     {
+        // Spawns enemies continuously faster
         spawnTimer += Time.deltaTime;
         if (spawnTime < spawnTimer)
         {
@@ -42,6 +42,7 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    // Spawns enemy at a random x and y coordination
     public void SpawnEnemy()
     {
         if (start)
@@ -53,6 +54,7 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    // Reduces the spawnTime so let enemies spawn continuously faster
     public void ReduceSpawnTime()
     {
         spawnTime -= 0.5f;

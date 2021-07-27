@@ -84,7 +84,7 @@ GameObject:
   - component: {fileID: 5566801459040279380}
   - component: {fileID: 5566801459040279403}
   m_Layer: 5
-  m_Name: UIBullets
+  m_Name: UIDisc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

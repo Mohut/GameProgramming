@@ -1,11 +1,10 @@
 using Unity.Mathematics;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class Disc : MonoBehaviour
 {
     private bool firstCollisionOccured;
     public bool hitted;
-    public bool disabled;
     [SerializeField] private Sprite redSprite;
     private int rotateCounter;
     private float rotateTimer;
@@ -14,9 +13,10 @@ public class Bullet : MonoBehaviour
 
     private void Start()
     {
+        // If firstCollisionOccured is true the disc can't destroy enemies anymore
         firstCollisionOccured = false;
         hitted = false;
-        disabled = false;
+    
         Invoke(nameof(ChangeLayer), 0.3f);
         rotateCounter = 0;
         rotateTimer = 0;
@@ -25,12 +25,7 @@ public class Bullet : MonoBehaviour
 
     private void Update()
     {
-        if (disabled)
-        {
-            transform.position = new Vector3(-3, -6, 0);
-            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-        }
-
+        // Animates the disc
         rotateTimer += Time.deltaTime;
         if (rotateTimer > rotateTime)
         {
@@ -41,6 +36,7 @@ public class Bullet : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D other)
     {
+        // Destroys the enemy if the disc hits it
         if (other.gameObject.tag.Equals("Enemy") && !hitted)
         {
             GetComponent<AudioSource>().Play();
@@ -49,20 +45,23 @@ public class Bullet : MonoBehaviour
             Destroy(other.gameObject);
         }
         
+        // Changes disc color and it can't destroys enemies now
         if (other.gameObject.tag.Equals("Border") || other.gameObject.tag.Equals("Enemy"))
         {
             GetComponent<SpriteRenderer>().sprite = redSprite;
             hitted = true;
         }
         
+        // Disc disappears so the player can shoot it again
         else if (other.gameObject.name.Equals("Player"))
         {
-            AimingShoot.Instance.PlayCollectSound();
-            BulletManager.Instance.bullets.Remove(gameObject);
+            Player.Instance.PlayCollectSound();
+            DiscManager.Instance.discs.Remove(gameObject);
             Destroy(gameObject);
         }
     }
 
+    // Changes the layer of the disc so the player won't collect it instantly
     public void ChangeLayer()
     {
         if(gameObject.layer != 8)
@@ -71,6 +70,7 @@ public class Bullet : MonoBehaviour
         }
     }
 
+    // Rotates the disc to look better
     public void Rotate()
     {
         switch (rotateCounter)

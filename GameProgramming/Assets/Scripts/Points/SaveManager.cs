@@ -27,6 +27,7 @@ public class SaveManager : MonoBehaviour
         LoadHightscoreList();
     }
 
+    // Saves the highscore list to a file on the computer
     public void Save()
     {
         BinaryFormatter formatter = new BinaryFormatter();
@@ -35,7 +36,8 @@ public class SaveManager : MonoBehaviour
         formatter.Serialize(stream, pointsList);
         stream.Close();
     }
-
+    
+    // Loads the highscore list from the created file
     public HighscoreList Load()
     {
         string path = Application.persistentDataPath + "/saves.deano";
@@ -55,6 +57,7 @@ public class SaveManager : MonoBehaviour
         return new HighscoreList();
     }
 
+    // Displays the highscore list for the player in the main menu
     public void LoadHightscoreList()
     {
         

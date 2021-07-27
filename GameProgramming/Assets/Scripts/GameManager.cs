@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     private TextMeshProUGUI timeText;
     [SerializeField] private RawImage endGameScreen;
     [SerializeField] private TextMeshProUGUI pointsText;
+    [SerializeField] private TextMeshProUGUI newHighscoreText;
+    [SerializeField] private TMP_InputField inputField;
 
     private void Start()
     {
@@ -20,9 +22,10 @@ public class GameManager : MonoBehaviour
         timeText.text = GameOverTime.ToString();
     }
 
+    // Checks if the player has disc to shoot. If not the player looses after 5 seconds without a disc
     private void Update()
     {
-        if (BulletManager.Instance.bullets.Count == BulletManager.Instance.maxBullets)
+        if (DiscManager.Instance.discs.Count == DiscManager.Instance.maxDiscs)
         {
             GameOverTime -= Time.deltaTime;
         }
@@ -39,11 +42,34 @@ public class GameManager : MonoBehaviour
         timeText.text = GameOverTime.ToString().Substring(0, 1);
     }
 
+    // When the player looses the score gets saved with the name of the player if he achieved a place in the highscore list
     public void GameOver()
     {
         Time.timeScale = 0;
         endGameScreen.gameObject.SetActive(true);
+        if (SaveManager.Instance.pointsList.pointsList != null)
+        {
+            if (SaveManager.Instance.pointsList.pointsList.Count < 3)
+            {
+                newHighscoreText.enabled = true;
+                inputField.gameObject.SetActive(true);
+                pointsText.text = Score.Instance.score + " Points";
+                return;
+            }
+            if (Score.Instance.score > SaveManager.Instance.pointsList.pointsList[2])
+            {
+                newHighscoreText.enabled = true;
+                inputField.gameObject.SetActive(true);
+                pointsText.text = Score.Instance.score + " Points";
+            }
+        }
+        else
+        {
+            newHighscoreText.enabled = true;
+            inputField.gameObject.SetActive(true);
+        }
         
-        pointsText.text = Score.Instance.score.ToString();
+
+        pointsText.text = Score.Instance.score + " Points";
     }
 }

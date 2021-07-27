@@ -9,6 +9,7 @@ public class HighscoreList
     public List<int> pointsList;
     public List<string> namesList;
 
+    // Adds new points to the highscore list
     public void AddNewPoints(int points, string name)
     {
         if (pointsList == null)

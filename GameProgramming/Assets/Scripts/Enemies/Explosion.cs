@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Explosion : MonoBehaviour
 {
-    // Start is called before the first frame update
+    // Lets the explosion animation disappear
     void Start()
     {
         Invoke(nameof(Destroy), 0.35f);

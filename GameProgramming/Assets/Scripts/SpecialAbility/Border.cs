@@ -22,6 +22,7 @@ public class Border : MonoBehaviour
         }
     }
 
+    // Resets the borders to brown if the player activates the special attack
     public void ResetBorder()
     {
         GetComponent<SpriteRenderer>().sprite = notActivatedBorder;
@@ -29,6 +30,7 @@ public class Border : MonoBehaviour
         activated = false;
     }
 
+    // Animates the border if the player hits it and switches it to "activated" for the special attack
     public void Bounce()
     {
         GetComponent<SpriteRenderer>().sprite = activatedBorder;

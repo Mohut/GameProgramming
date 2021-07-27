@@ -17,6 +17,7 @@ public class BorderManager : MonoBehaviour
         }
     }
 
+    // Checks if the player can use his special attack
     public void CheckBorders()
     {
         bool allActivated = true;
@@ -30,9 +31,10 @@ public class BorderManager : MonoBehaviour
         }
 
         if (allActivated)
-            AimingShoot.Instance.specialShootReady = true;
+            Player.Instance.specialShootReady = true;
     }
 
+    // Resets all borders if the player uses his special attack
     public void ResetAllBorders()
     {
         foreach (Border border in borders)

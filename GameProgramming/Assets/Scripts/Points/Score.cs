@@ -26,12 +26,14 @@ public class Score : MonoBehaviour
         canvas = GameObject.Find("UI");
         scoreText = GetComponent<TextMeshProUGUI>();
     }
-
+    
+    // Updates the point text in the upper right UI
     private void Update()
     {
         scoreText.text = score.ToString();
     }
 
+    // Adds points to the overall score
     public void AddPoints(int points, GameObject enemy)
     {
         score += points;
@@ -41,6 +43,7 @@ public class Score : MonoBehaviour
         StartCoroutine(Animate(text));
     }
 
+    // Shows the player the points
     IEnumerator Animate(TextMeshProUGUI text)
     {
         text.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 50f);

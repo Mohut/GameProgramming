@@ -1,7 +1,9 @@
+using System.Collections;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
 
-public class AimingShoot : MonoBehaviour
+public class Player : MonoBehaviour
 {
     private Vector3 mousePosition;
     private Camera mainCamera;
@@ -11,7 +13,11 @@ public class AimingShoot : MonoBehaviour
     private bool onPlatform;
     private EnemySpawner enemySpawner;
     public bool specialShootReady;
-    public static AimingShoot Instance;
+    public static Player Instance;
+    public bool hittable;
+    private float hitTimer;
+    private float hitTime;
+    public bool blinkingBool;
 
     [SerializeField] private GameObject shockwave;
     [SerializeField] private int force;
@@ -34,6 +40,10 @@ public class AimingShoot : MonoBehaviour
             Destroy(this);
         }
 
+        blinkingBool = false;
+        hitTime = 1f;
+        hitTimer = 0;
+        hittable = true;
         specialShootReady = false;
         mainCamera = Camera.main;
         gunTransform = transform.Find("Weapon");
@@ -52,8 +62,23 @@ public class AimingShoot : MonoBehaviour
         Aim();
         
         Shoot();
+
+        // Lets the player blink and be invincible for some time after being hit by an enemy
+        if (!hittable)
+        {
+            hitTimer += Time.deltaTime;
+            if(hitTimer > hitTime)
+                hittable = true;
+        }
+
+        if (blinkingBool)
+        {
+            StartCoroutine(nameof(blinking));
+            blinkingBool = false;
+        }
     }
 
+    // Rotates the player sprite to face the mouse cursor
     public void MoveSprites()
     {
         if (mousePosition.x < transform.position.x)
@@ -68,6 +93,7 @@ public class AimingShoot : MonoBehaviour
         }
     }
 
+    // Rotates the gun to the mouse position
     public void Aim()
     {
         Vector3 aimDirection = (mousePosition - transform.position).normalized;
@@ -82,6 +108,10 @@ public class AimingShoot : MonoBehaviour
         }
     }
 
+    /*
+     Instantiates a disc if the player has one to shoot after clicking the left mouse button
+     and gives it force into the mouse direction. The player gets pushed in the opposite direction
+    */
     public void Shoot()
     {
         if (Input.GetMouseButtonDown(0))
@@ -91,17 +121,18 @@ public class AimingShoot : MonoBehaviour
             enemySpawner.start = true;
             rigidbody2D.gravityScale = 0.5f;
             
-            if (BulletManager.Instance.bullets.Count < BulletManager.Instance.maxBullets)
+            if (DiscManager.Instance.discs.Count < DiscManager.Instance.maxDiscs)
             { 
                 GetComponent<AudioSource>().PlayOneShot(shootSound);
                 var newBullet = Instantiate(bullet, transform.position, Quaternion.identity);
                 Vector2 shotDirection = -(mainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position);
                 rigidbody2D.AddForce(shotDirection.normalized * force, ForceMode2D.Impulse);
                 newBullet.GetComponent<Rigidbody2D>().AddForce(-shotDirection.normalized * 25, ForceMode2D.Impulse);
-                BulletManager.Instance.bullets.Add(newBullet);
+                DiscManager.Instance.discs.Add(newBullet);
             }
         }
         
+        // Instantiates the special ability
         if (Input.GetMouseButtonDown(1) && specialShootReady)
         {
             GetComponent<AudioSource>().PlayOneShot(specialSound);
@@ -124,6 +155,18 @@ public class AimingShoot : MonoBehaviour
     public void PlayHittedSound()
     {
         GetComponent<AudioSource>().PlayOneShot(hittedSound);
+    }
+    
+    // Lets the player blink
+    IEnumerator blinking()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+           GetComponent<SpriteRenderer>().enabled = false;
+           yield return new WaitForSeconds(0.1f);
+           GetComponent<SpriteRenderer>().enabled = true;
+           yield return new WaitForSeconds(0.1f); 
+        }
     }
 
 }
